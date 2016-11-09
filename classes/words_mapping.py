@@ -15,22 +15,23 @@ class WordMapper(object):
 
     def __init__(self):
         """
-        class constructor which appends the start url to the crawler and start crawling
-        :param start_url:
+        class constructor which read the text file in starter the mapper
         """
         self.read_file()
         self.build_map()
 
     def read_file(self):
         """
-        recurseive function ends when the links_to_crawl list is empty
-        :return: True when the crawler finishes
+        open the text file and store it as a word list
         """
         file = open('CrawlerFile.txt', 'r')
         self.words = file.read().split()
         self.count_words = len(self.words)
 
     def build_map(self):
+        """
+        :return:
+        """
 
         for index, word in enumerate(self.words):
             if word not in self.result:
@@ -39,9 +40,22 @@ class WordMapper(object):
                 next_word = self.words[index + 1]
                 self.result[word].append(next_word)
 
+    def get_previews_words(self, word):
+        found_words = (key for key, vals in self.result.items() if word in vals)
+        return found_words
+
     def print_results(self):
+        """
+        output the mapper result to the console
+        :return:
+        """
+        print "The total words count is: {0}".format(self.count_words)
+        print "The total key words count is: {0}".format(len(self.result))
         for key, value in self.result.iteritems():
-            row =  '{0} => ['.format(key)
+            row = '['
+            for word in self.get_previews_words(key):
+                row += '{0}, '.format(word)
+            row += '] <= {0} => ['.format(key)
             for word in value:
-                row +='{0}, '.format(word)
+                row += '{0}, '.format(word)
             print row + "]"
